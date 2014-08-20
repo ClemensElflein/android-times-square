@@ -1,5 +1,11 @@
 package com.squareup.timessquare.sample;
 
+import static android.widget.Toast.LENGTH_SHORT;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -10,19 +16,15 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
-import com.squareup.timessquare.CalendarPickerView;
-import com.squareup.timessquare.CalendarPickerView.SelectionMode;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
-import static android.widget.Toast.LENGTH_SHORT;
+import com.squareup.timessquare.HorizontalCalendarPickerView;
+
 
 public class SampleTimesSquareActivity extends Activity {
   private static final String TAG = "SampleTimesSquareActivity";
-  private CalendarPickerView calendar;
+  private HorizontalCalendarPickerView calendar;
   private AlertDialog theDialog;
-  private CalendarPickerView dialogView;
+  private HorizontalCalendarPickerView dialogView;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -35,11 +37,8 @@ public class SampleTimesSquareActivity extends Activity {
     final Calendar lastYear = Calendar.getInstance();
     lastYear.add(Calendar.YEAR, -1);
 
-    calendar = (CalendarPickerView) findViewById(R.id.calendar_view);
-    calendar.init(lastYear.getTime(), nextYear.getTime()) //
-        .inMode(SelectionMode.SINGLE) //
-        .withSelectedDate(new Date());
-
+    calendar = (HorizontalCalendarPickerView) findViewById(R.id.calendar_view);
+    
     final Button single = (Button) findViewById(R.id.button_single);
     final Button multi = (Button) findViewById(R.id.button_multi);
     final Button range = (Button) findViewById(R.id.button_range);
@@ -54,9 +53,6 @@ public class SampleTimesSquareActivity extends Activity {
         range.setEnabled(true);
         displayOnly.setEnabled(true);
 
-        calendar.init(lastYear.getTime(), nextYear.getTime()) //
-            .inMode(SelectionMode.SINGLE) //
-            .withSelectedDate(new Date());
       }
     });
 
@@ -74,9 +70,6 @@ public class SampleTimesSquareActivity extends Activity {
           today.add(Calendar.DAY_OF_MONTH, 3);
           dates.add(today.getTime());
         }
-        calendar.init(new Date(), nextYear.getTime()) //
-            .inMode(SelectionMode.MULTIPLE) //
-            .withSelectedDates(dates);
       }
     });
 
@@ -94,9 +87,6 @@ public class SampleTimesSquareActivity extends Activity {
         dates.add(today.getTime());
         today.add(Calendar.DATE, 5);
         dates.add(today.getTime());
-        calendar.init(new Date(), nextYear.getTime()) //
-            .inMode(SelectionMode.RANGE) //
-            .withSelectedDates(dates);
       }
     });
 
@@ -107,19 +97,13 @@ public class SampleTimesSquareActivity extends Activity {
         multi.setEnabled(true);
         range.setEnabled(true);
         displayOnly.setEnabled(false);
-
-        calendar.init(new Date(), nextYear.getTime()) //
-            .inMode(SelectionMode.SINGLE) //
-            .withSelectedDate(new Date())
-            .displayOnly();
       }
     });
 
     dialog.setOnClickListener(new OnClickListener() {
       @Override public void onClick(View view) {
-        dialogView = (CalendarPickerView) getLayoutInflater().inflate(R.layout.dialog, null, false);
-        dialogView.init(lastYear.getTime(), nextYear.getTime()) //
-            .withSelectedDate(new Date());
+        dialogView = (HorizontalCalendarPickerView) getLayoutInflater().inflate(R.layout.dialog, null, false);
+        
         theDialog =
             new AlertDialog.Builder(SampleTimesSquareActivity.this).setTitle("I'm a dialog!")
                 .setView(dialogView)
@@ -133,7 +117,7 @@ public class SampleTimesSquareActivity extends Activity {
           @Override
           public void onShow(DialogInterface dialogInterface) {
             Log.d(TAG, "onShow: fix the dimens!");
-            dialogView.fixDialogDimens();
+            
           }
         });
         theDialog.show();
@@ -143,9 +127,9 @@ public class SampleTimesSquareActivity extends Activity {
     customized.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View view) {
-        dialogView = (CalendarPickerView) getLayoutInflater() //
+        dialogView = (HorizontalCalendarPickerView) getLayoutInflater() //
             .inflate(R.layout.dialog_customized, null, false);
-        dialogView.init(lastYear.getTime(), nextYear.getTime()).withSelectedDate(new Date());
+        
         theDialog =
             new AlertDialog.Builder(SampleTimesSquareActivity.this).setTitle("Pimp my calendar !")
                 .setView(dialogView)
@@ -159,7 +143,7 @@ public class SampleTimesSquareActivity extends Activity {
           @Override
           public void onShow(DialogInterface dialogInterface) {
             Log.d(TAG, "onShow: fix the dimens!");
-            dialogView.fixDialogDimens();
+            
           }
         });
         theDialog.show();
@@ -169,9 +153,8 @@ public class SampleTimesSquareActivity extends Activity {
     findViewById(R.id.done_button).setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View view) {
-        Log.d(TAG, "Selected time in millis: " + calendar.getSelectedDate().getTime());
-        String toast = "Selected: " + calendar.getSelectedDate().getTime();
-        Toast.makeText(SampleTimesSquareActivity.this, toast, LENGTH_SHORT).show();
+        
+        Toast.makeText(SampleTimesSquareActivity.this, "sfgsdfgdf", LENGTH_SHORT).show();
       }
     });
   }
@@ -180,14 +163,14 @@ public class SampleTimesSquareActivity extends Activity {
     boolean applyFixes = theDialog != null && theDialog.isShowing();
     if (applyFixes) {
       Log.d(TAG, "Config change: unfix the dimens so I'll get remeasured!");
-      dialogView.unfixDialogDimens();
+      
     }
     super.onConfigurationChanged(newConfig);
     if (applyFixes) {
       dialogView.post(new Runnable() {
         @Override public void run() {
           Log.d(TAG, "Config change done: re-fix the dimens!");
-          dialogView.fixDialogDimens();
+          
         }
       });
     }

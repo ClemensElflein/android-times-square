@@ -8,6 +8,7 @@ class MonthDescriptor {
   private final int year;
   private final Date date;
   private String label;
+  private boolean hasChanged = false;
 
   public MonthDescriptor(int month, int year, Date date, String label) {
     this.month = month;
@@ -15,8 +16,22 @@ class MonthDescriptor {
     this.date = date;
     this.label = label;
   }
+  
+  
 
-  public int getMonth() {
+  public boolean isHasChanged() {
+	return hasChanged;
+  }
+
+
+
+	public void setHasChanged(boolean hasChanged) {
+		this.hasChanged = hasChanged;
+	}
+
+
+
+	public int getMonth() {
     return month;
   }
 
