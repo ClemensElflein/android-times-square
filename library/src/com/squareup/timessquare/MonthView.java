@@ -55,7 +55,6 @@ public class MonthView extends LinearLayout {
 
   public void init(MonthDescriptor month, List<List<MonthCellDescriptor>> cells,
       boolean displayOnly) {
-    Logr.d("Initializing MonthView (%d) for %s", System.identityHashCode(this), month);
     long start = System.currentTimeMillis();
     title.setText(month.getLabel());
 
@@ -87,7 +86,6 @@ public class MonthView extends LinearLayout {
         weekRow.setVisibility(GONE);
       }
     }
-    Logr.d("MonthView.init took %d ms", System.currentTimeMillis() - start);
   }
 
   public void setDividerColor(int color) {

@@ -45,7 +45,6 @@ public class CalendarRowView extends ViewGroup implements View.OnClickListener {
     final int widthWithPadding = totalWidth + getPaddingLeft() + getPaddingRight();
     final int heightWithPadding = rowHeight + getPaddingTop() + getPaddingBottom();
     setMeasuredDimension(widthWithPadding, heightWithPadding);
-    Logr.d("Row.onMeasure %d ms", System.currentTimeMillis() - start);
   }
 
   @Override protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
@@ -55,7 +54,6 @@ public class CalendarRowView extends ViewGroup implements View.OnClickListener {
       final View child = getChildAt(c);
       child.layout(c * cellSize, 0, (c + 1) * cellSize, cellHeight);
     }
-    Logr.d("Row.onLayout %d ms", System.currentTimeMillis() - start);
   }
 
   public void setIsHeaderRow(boolean isHeaderRow) {

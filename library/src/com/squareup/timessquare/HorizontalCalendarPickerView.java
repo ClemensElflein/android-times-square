@@ -32,6 +32,7 @@ import android.graphics.Color;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -477,7 +478,19 @@ public class HorizontalCalendarPickerView extends ViewPager {
 		@Override
 		public void handleClick(MonthCellDescriptor cell) {
 			Date clickedDate = cell.getDate();
-
+			if(selectionMode == SelectionMode.SINGLE || selectionMode == SelectionMode.RANGE) {
+				for(MonthCellDescriptor lastCell : selectedCells) {
+					Date lastSelectedDate = lastCell.getDate();
+							
+					MonthCellWithMonthIndex index = getMonthCellWithIndexByDate(lastSelectedDate);
+					months.get(index.monthIndex).setHasChanged(true);
+				}
+			}
+			
+			MonthCellWithMonthIndex index = getMonthCellWithIndexByDate(clickedDate);
+			if(index != null) {
+				months.get(index.monthIndex).setHasChanged(true);
+			}
 			if (!betweenDates(clickedDate, minCal, maxCal)
 					|| !isDateSelectable(clickedDate)) {
 				if (invalidDateListener != null) {
@@ -729,7 +742,13 @@ public class HorizontalCalendarPickerView extends ViewPager {
 		
 		@Override
 		public int getItemPosition(Object object) {
-			return POSITION_NONE;
+			if((Integer)((View)object).getTag() >= months.size() || months.get((Integer)((View)object).getTag()).isHasChanged()) {
+				Log.e("View", "Changed:"+(Integer)((View)object).getTag());
+				return POSITION_NONE;
+			}
+			
+			Log.e("View", "NOT!!Changed:"+(Integer)((View)object).getTag());
+			return POSITION_UNCHANGED;
 		}
 
 		@Override
@@ -744,7 +763,11 @@ public class HorizontalCalendarPickerView extends ViewPager {
 			}
 			monthView.init(months.get(position), cells.get(position),
 					displayOnly);
+			
+			Log.w("View", "Init pos:"+position);
 			((ViewPager)container).addView(monthView, 0);
+			monthView.setTag((Integer)position);
+			months.get(position).setHasChanged(false);
 			return monthView;
 		}
 
